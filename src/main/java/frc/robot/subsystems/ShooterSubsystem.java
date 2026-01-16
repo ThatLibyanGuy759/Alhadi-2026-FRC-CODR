@@ -19,7 +19,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
 public void ShootFuel(double speed){
-    shooterMotor.setControl(dutyCycle.withOutput(speed))
+    shooterMotor.setControl(dutyCycle.withOutput(speed));
 }
 
 public void RunVelocity(double rps){
