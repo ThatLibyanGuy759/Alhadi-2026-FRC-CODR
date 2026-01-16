@@ -22,7 +22,7 @@ public void ShootFuel(double speed){
     shooterMotor.setControl(dutyCycle.withOutput(speed));
 }
 
-public void RunVelocity(double rps){
+public void runVelocity(double rps){
     voltageRequest.Velocity = rps;
     shooterMotor.setControl(voltageRequest); 
 }
