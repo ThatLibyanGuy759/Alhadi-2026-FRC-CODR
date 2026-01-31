@@ -83,12 +83,12 @@ public class ShooterSubsystem extends SubsystemBase {
   }
   
 public void runVelocityTorqueFOC(double rps) { 
-  shooterMotorOne.setControl(velocityTorqueRequest.withVelocity(rps));
-  shooterMotorTwo.setControl(velocityTorqueRequest.withVelocity(rps));
+    shooterMotorOne.setControl(velocityTorqueRequest.withVelocity(rps));
+    shooterMotorTwo.setControl(velocityTorqueRequest.withVelocity(rps));
 
-  // Logging for verification
-  SmartDashboard.putNumber("Motor Target RPS", rps);
-  SmartDashboard.putNumber("Motor1 Actual RPS", shooterMotorOne.getVelocity().getValueAsDouble());
+    // Logging for verification
+    SmartDashboard.putNumber("Motor Target RPS", rps);
+    SmartDashboard.putNumber("Motor1 Actual RPS", shooterMotorOne.getVelocity().getValueAsDouble());
   SmartDashboard.putNumber("Motor2 Actual RPS", shooterMotorTwo.getVelocity().getValueAsDouble());
 }
 
