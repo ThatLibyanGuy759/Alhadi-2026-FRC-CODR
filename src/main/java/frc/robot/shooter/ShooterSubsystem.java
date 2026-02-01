@@ -4,30 +4,27 @@
 
 package frc.robot.shooter;
 
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-
-import javax.xml.validation.SchemaFactoryConfigurationError;
-
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
-import frc.robot.Configs;
-import frc.robot.Configs.ShooterConfigs;
 
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Configs;
 import static edu.wpi.first.units.Units.*;
-import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
-import com.ctre.phoenix6.controls.VoltageOut;
+
 
 public class ShooterSubsystem extends SubsystemBase {
     private final TalonFX shooterMotorOne;
     private final TalonFX shooterMotorTwo;
+    public final TalonFX kickerMotor;
     private final DutyCycleOut dutyCycle = new DutyCycleOut(0); 
     private final VelocityVoltage voltageRequest = new VelocityVoltage(0).withEnableFOC(true);
     private final VelocityTorqueCurrentFOC velocityTorqueRequest = new VelocityTorqueCurrentFOC(0);
@@ -38,6 +35,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
     shooterMotorOne = new TalonFX(ShooterConstants.shooterMotorOneID);
     shooterMotorTwo = new TalonFX(ShooterConstants.shooterMotorTwoID);
+    kickerMotor = new TalonFX(ShooterConstants.kickerMotorID);
       m_SysIdRoutine = new SysIdRoutine(
       new SysIdRoutine.Config(null,
       Volts.of(4),
@@ -60,6 +58,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void configureMotors() {
     shooterMotorOne.getConfigurator().apply(Configs.ShooterConfigs.shooterMotorConfig());
     shooterMotorTwo.getConfigurator().apply(Configs.ShooterConfigs.shooterMotorConfig());
+    kickerMotor.getConfigurator().apply(Configs.ShooterConfigs.shooterMotorConfig());
 
     shooterMotorOne.getVelocity().setUpdateFrequency(100);
     shooterMotorOne.getPosition().setUpdateFrequency(100);
@@ -82,15 +81,16 @@ public class ShooterSubsystem extends SubsystemBase {
     shooterMotorOne.setControl(voltageRequest); 
   }
   
-public void runVelocityTorqueFOC(double rps) { 
+  public void runVelocityTorqueFOC(double rps, double kickerSpeed) { 
     shooterMotorOne.setControl(velocityTorqueRequest.withVelocity(rps));
     shooterMotorTwo.setControl(velocityTorqueRequest.withVelocity(rps));
+    kickerMotor.setControl(dutyCycle.withOutput(kickerSpeed));
 
     // Logging for verification
     SmartDashboard.putNumber("Motor Target RPS", rps);
     SmartDashboard.putNumber("Motor1 Actual RPS", shooterMotorOne.getVelocity().getValueAsDouble());
-  SmartDashboard.putNumber("Motor2 Actual RPS", shooterMotorTwo.getVelocity().getValueAsDouble());
-}
+    SmartDashboard.putNumber("Motor2 Actual RPS", shooterMotorTwo.getVelocity().getValueAsDouble());
+  }
 
 
 

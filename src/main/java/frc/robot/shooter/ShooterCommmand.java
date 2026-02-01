@@ -13,16 +13,18 @@ public class ShooterCommmand extends Command {
   // private final ExampleSubsystem m_subsystem;
   private final ShooterSubsystem m_shooterSubsystem;
   private final double targetRPS;
+  private final double kickerSpeed;
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ShooterCommmand(ShooterSubsystem m_shooterSubsystem, double targetRPS) {
+  public ShooterCommmand(ShooterSubsystem m_shooterSubsystem, double targetRPS, double kickerSpeed) {
     // m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_shooterSubsystem = m_shooterSubsystem;
     this.targetRPS = targetRPS;
+    this.kickerSpeed = kickerSpeed;
     addRequirements(m_shooterSubsystem);
   }
 
@@ -33,12 +35,18 @@ public class ShooterCommmand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.runVelocity(targetRPS);
+    m_shooterSubsystem.runVelocityTorqueFOC(targetRPS, kickerSpeed);
+    m_shooterSubsystem.printCurrentLimits();
+    m_shooterSubsystem.printRPM();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_shooterSubsystem.runVelocityTorqueFOC(0, 0);
+    m_shooterSubsystem.printCurrentLimits();
+    m_shooterSubsystem.printRPM();
+  }
 
   // Returns true when the command should end.
   @Override
