@@ -12,16 +12,16 @@ public final class Configs {
 
 
         public static TalonFXConfiguration shooterMotorConfig() {
-            TalonFXConfiguration config = new TalonFXConfiguration();
+        TalonFXConfiguration config = new TalonFXConfiguration();
        
         config.Slot0.kP = ShooterConstants.kP;
         config.Slot0.kI = ShooterConstants.kI;
         config.Slot0.kD = ShooterConstants.kD;
 
-        // 2. Feedforward Gains from SysId (Characterization Analysis)
-        config.Slot0.kS = 0.25; // Static friction (Amps or Volts)
-        config.Slot0.kV = 0.12; // Velocity constant
-        config.Slot0.kA = 0.01; // Acceleration constant
+        
+        config.Slot0.kS = 0.25;
+        config.Slot0.kV = 0.12; 
+        config.Slot0.kA = 0.01;
 
         config.Feedback.SensorToMechanismRatio = 6.0;
 

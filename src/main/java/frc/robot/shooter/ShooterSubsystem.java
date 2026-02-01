@@ -42,12 +42,21 @@ public class ShooterSubsystem extends SubsystemBase {
       null, 
       (state) -> SignalLogger.writeString("state", state.toString())),
       new SysIdRoutine.Mechanism(
-        (volts) -> shooterMotorOne.setControl(sysIdControl.withOutput(volts.in(Volts))),
+        (volts) -> {
+          shooterMotorOne.setControl(sysIdControl.withOutput(volts.in(Volts)));
+          shooterMotorTwo.setControl(sysIdControl.withOutput(volts.in(Volts)));
+        },
+        
         log -> {
-          log.motor("Shooter Motor")
+          log.motor("Shooter Motor One")
           .voltage(shooterMotorOne.getMotorVoltage().getValue())
           .angularPosition(shooterMotorOne.getPosition().getValue())
           .angularVelocity(shooterMotorOne.getVelocity().getValue());
+
+          log.motor("Shooter Motor Two")
+          .voltage(shooterMotorTwo.getMotorVoltage().getValue())
+          .angularPosition(shooterMotorTwo.getPosition().getValue())
+          .angularVelocity(shooterMotorTwo.getVelocity().getValue());
         },
       this));
     configureMotors();
@@ -62,8 +71,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     shooterMotorOne.getVelocity().setUpdateFrequency(100);
     shooterMotorOne.getPosition().setUpdateFrequency(100);
-
+    shooterMotorTwo.getVelocity().setUpdateFrequency(100);
+    shooterMotorTwo.getPosition().setUpdateFrequency(100);
   }
+
   public Command sysIdDynamic(SysIdRoutine.Direction direction){
     return m_SysIdRoutine.dynamic(direction);
   }
@@ -91,9 +102,6 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Motor1 Actual RPS", shooterMotorOne.getVelocity().getValueAsDouble());
     SmartDashboard.putNumber("Motor2 Actual RPS", shooterMotorTwo.getVelocity().getValueAsDouble());
   }
-
-
-
   
 
   public void printVoltageOutput() {
