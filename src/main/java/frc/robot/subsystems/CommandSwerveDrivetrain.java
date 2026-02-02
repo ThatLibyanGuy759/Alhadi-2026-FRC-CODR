@@ -241,6 +241,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
+
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
 
@@ -250,11 +251,28 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             double deltaTime = currentTime - m_lastSimTime;
             m_lastSimTime = currentTime;
 
-            /* use the measured time delta, get battery voltage from WPILib */
+
             updateSimState(deltaTime, RobotController.getBatteryVoltage());
+
+
+            Pose2d currentSimPose = getState().Pose;
+
+            double minX = 0.7;   
+            double maxX = 17.1; 
+            double minY = 0.7;
+            double maxY = 7.8;
+
+            if (currentSimPose.getX() < minX || currentSimPose.getX() > maxX || 
+                currentSimPose.getY() < minY || currentSimPose.getY() > maxY) {
+                
+              
+                double clampedX = Math.max(minX, Math.min(currentSimPose.getX(), maxX));
+                double clampedY = Math.max(minY, Math.min(currentSimPose.getY(), maxY));
+                this.resetPose(new Pose2d(clampedX, clampedY, currentSimPose.getRotation()));
+            }
         });
         m_simNotifier.startPeriodic(kSimLoopPeriod);
-    }
+        }
 
     /**
      * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate
