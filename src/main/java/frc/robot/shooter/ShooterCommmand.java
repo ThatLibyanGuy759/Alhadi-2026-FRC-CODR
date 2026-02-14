@@ -35,7 +35,7 @@ public class ShooterCommmand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.runVelocityTorqueFOC(targetRPS, kickerSpeed);
+    m_shooterSubsystem.runVelocityTorqueFOC(targetRPS);
     m_shooterSubsystem.printCurrentLimits();
     m_shooterSubsystem.printRPM();
   }
@@ -43,7 +43,7 @@ public class ShooterCommmand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooterSubsystem.runVelocityTorqueFOC(0, 0);
+    m_shooterSubsystem.runVelocityTorqueFOC(0);
     m_shooterSubsystem.printCurrentLimits();
     m_shooterSubsystem.printRPM();
   }
